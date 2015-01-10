@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uexplugins>
+    <plugin
+        uexName="uexBrokenLine" version="3.0.1" build="1">
+		<info>1:修复创建Bitmap内存溢出</info>
+        <build>0:折线图功能插件</build>
+    </plugin>
+</uexplugins>

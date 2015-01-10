@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<uexplugins>
+
+    <!-- plugin test -->
+    <plugin
+        className="com.zywx.uexbrokenline.uexBrokenLine"
+        uexName="uexBrokenLine" version="3.0" build="0">
+        <method name="open" />
+        <method name="close" />
+        <method name="setData" /> 
+    </plugin>
+
+</uexplugins>
