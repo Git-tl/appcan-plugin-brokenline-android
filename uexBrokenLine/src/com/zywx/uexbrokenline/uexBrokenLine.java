@@ -21,12 +21,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 public class uexBrokenLine extends EUExBase {
@@ -38,9 +39,11 @@ public class uexBrokenLine extends EUExBase {
 	private Map<String, Bitmap> yViews = new HashMap<String, Bitmap>();
 
 	private String json;
+	private float density;
 
 	public uexBrokenLine(Context context, EBrowserView view) {
 		super(context, view);
+		density = mContext.getResources().getDisplayMetrics().density;
 	}
 
 	public void setData(String[] parm) {
@@ -70,8 +73,8 @@ public class uexBrokenLine extends EUExBase {
 				try {
 					x = Integer.parseInt(inX);
 					y = Integer.parseInt(inY);
-					w = Integer.parseInt(inW);
-					h = Integer.parseInt(inH);
+					w = Math.round(Float.parseFloat(inW));
+					h = Math.round(Float.parseFloat(inH));
 				} catch (Exception e) {
 					e.printStackTrace();
 					return;
@@ -87,8 +90,7 @@ public class uexBrokenLine extends EUExBase {
 				List<String> compareYList = new ArrayList<String>();
 
 				if (json == null || json.length() == 0) {
-					Toast.makeText(mContext, "请先调用setData方法", Toast.LENGTH_LONG)
-							.show();
+					Toast.makeText(mContext, "请先调用setData方法", Toast.LENGTH_LONG).show();
 					return;
 				}
 				try {
@@ -130,41 +132,45 @@ public class uexBrokenLine extends EUExBase {
 					e.printStackTrace();
 				}
 
-				int myViewID = EUExUtil
-						.getResLayoutID("plugin_linechart_layout");
+				int myViewID = EUExUtil.getResLayoutID("plugin_linechart_layout");
 				if (myViewID <= 0) {
-					Toast.makeText(mContext,
-							"找不到名为:plugin_linechart_layout的layout文件!",
-							Toast.LENGTH_LONG).show();
+					Toast.makeText(mContext, "找不到名为:plugin_linechart_layout的layout文件!", Toast.LENGTH_LONG).show();
 					return;
 				}
-				ViewGroup mMyView = (ViewGroup) View.inflate(mContext,
-						myViewID, null);
-				WindowManager windowManager = ((Activity) mContext)
-						.getWindowManager();
-
-				DisplayMetrics displayMetrics = new DisplayMetrics();
-				windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+				
+				ViewGroup mMyView = (ViewGroup) View.inflate(mContext,myViewID, null);
 				MySCView msview = (MySCView) mMyView.findViewById(EUExUtil.getResIdID("plugin_linechart_msview"));
-				msview.setData(mContext, w, h, displayMetrics.density, YMin, YMax, YStep, ActX, xCount, XValue, YValue, compareYList);
-				ImageView YimageView = (ImageView) mMyView
-						.findViewById(EUExUtil
-								.getResIdID("plugin_linechart_y_axis_view"));
-				Bitmap yBitmap = creatYAxisBitmap(displayMetrics.density, h,
-						Ygap, YMin, YMax, YStep);
+				ImageView YimageView = (ImageView) mMyView.findViewById(EUExUtil.getResIdID("plugin_linechart_y_axis_view"));
+				
+				msview.setData(mContext, w, h, density, YMin, YMax, YStep, ActX, xCount, XValue, YValue, compareYList);
+				Bitmap yBitmap = creatYAxisBitmap(density, h, Ygap, YMin, YMax, YStep);
 				yViews.put(id, yBitmap);
 				YimageView.setBackgroundDrawable(new BitmapDrawable(yBitmap));
-				RelativeLayout.LayoutParams lparm = new RelativeLayout.LayoutParams(
-						w, h);
-				lparm.leftMargin = x;
-				lparm.topMargin = y;
+				
+				LayoutParams lparm = new LayoutParams((int)w, (int)h);
+				lparm.leftMargin = (int)x;
+				lparm.topMargin = (int)y;
 				views.put(id, mMyView);
-				addViewToCurrentWindow(mMyView, lparm);
+				addView2CurrentWindow(mMyView, lparm);
 			}
 		});
 
 	}
 
+	private void addView2CurrentWindow(View child,
+			RelativeLayout.LayoutParams parms) {
+		int l = (int) (parms.leftMargin);
+		int t = (int) (parms.topMargin);
+		int w = parms.width;
+		int h = parms.height;
+		FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, h);
+		lp.gravity = Gravity.NO_GRAVITY;
+		lp.leftMargin = l;
+		lp.topMargin = t;
+		adptLayoutParams(parms, lp);
+		mBrwView.addViewToCurrentWindow(child, lp);
+	}
+	
 	public void close(final String[] parm) {
 		((Activity) mContext).runOnUiThread(new Runnable() {
 
@@ -232,24 +238,22 @@ public class uexBrokenLine extends EUExBase {
 			float yMax, float stap) {
 		float allFrameHeight = h * density;
 		w = (int) (w * density);
-		float frameHeight = allFrameHeight - margin * 2 * density - Xgap
-				* density;
+		float frameHeight = allFrameHeight - margin * 2 * density - Xgap * density;
 		float cellHeight = ((float) frameHeight / ((float) (yMax - yMin) / (float) stap));
 
 		h = (int) ((h - Xgap) * density);
-		Bitmap bitmap = Bitmap.createBitmap(w, (int) allFrameHeight,
-				Config.ARGB_4444);
+		Bitmap bitmap = Bitmap.createBitmap(w, (int) allFrameHeight, Config.ARGB_4444);
 		Canvas canvas = new Canvas(bitmap);
 		canvas.drawColor(Color.WHITE);
 
 		int size = (int) ((float) (yMax - yMin) / (float) stap) + 1;
 
 		Paint paint = new Paint();
-		paint.setColor(Color.GRAY);
-		paint.setTextSize(50);
+		paint.setColor(Color.RED);
+		paint.setTextSize(35 * density);
 		paint.setTextAlign(Paint.Align.CENTER);
 		for (int i = 0; i < size; i++) {
-			float y = h - i * cellHeight - margin;
+			float y = h - i * cellHeight;
 			String content;
 			if (stap < 1) {
 				content = yMin + i * stap + "";

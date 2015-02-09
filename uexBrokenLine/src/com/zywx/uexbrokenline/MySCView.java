@@ -32,10 +32,10 @@ public class MySCView extends View {
 	private int tempYgap;
 	private int tempMargin;
 	private final static int gridColor = Color.rgb(183, 186, 177);
-	private final static int redColor = Color.rgb(204, 42, 42);
-	private final static int greenLineColor = Color.argb(150, 192, 230, 109);
-	private final static int greenRectColor = Color.rgb(192, 230, 109);
-	private final static int blueColor = Color.rgb(00, 122, 178);
+//	private final static int redColor = Color.rgb(204, 42, 42);
+	private final static int greenLineColor = Color.argb(102, 0, 255, 0);
+	private final static int greenRectColor = Color.rgb(96, 200, 51);
+	private final static int blueColor = Color.rgb(00, 117, 166);
 
 	public static final int Ygap = 70;// y轴空隙 dip
 	public static final int Xgap = 70;// X轴空隙 dip
@@ -112,8 +112,8 @@ public class MySCView extends View {
 			PointF point = new PointF(pointX, pointY);
 			points.add(point);
 		}
-		rectPaint.setStrokeWidth(8);
-		rectPaint.setColor(redColor);
+		rectPaint.setStrokeWidth(8 * density);
+		rectPaint.setColor(Color.RED);
 		int compareYSize = compareYList.size();
 		for (int i = 0; i < compareYSize; i++) {
 			String string = compareYList.get(i);
@@ -136,17 +136,16 @@ public class MySCView extends View {
 		}
 		rectPaint.setColor(Color.BLACK);
 		rectPaint.setTextAlign(Paint.Align.CENTER);
-		rectPaint.setTextSize(30);
+		rectPaint.setTextSize(30 * density);
 		int bitmapW = 200;
 		int halfW = bitmapW / 2;
 		int halfH = tempXgap / 2;
 		for (int i = 0; i < size; i++) {
 			PointF point = points.get(i);
 			if (i == actX) {
-				rectPaint.setColor(redColor);
+				rectPaint.setColor(Color.RED);
 			}
-			Bitmap bitmap2 = Bitmap.createBitmap(bitmapW, tempXgap,
-					Config.ARGB_8888);
+			Bitmap bitmap2 = Bitmap.createBitmap(bitmapW, tempXgap, Config.ARGB_8888);
 			Canvas canvas2 = new Canvas(bitmap2);
 			canvas2.drawText(XValue.get(i), halfW, halfH, rectPaint);
 			Matrix matrix = new Matrix();
@@ -185,7 +184,7 @@ public class MySCView extends View {
 	}
 
 	private void drawGrid(Canvas canvas, int sizeH) {
-		int sizeWidth = (int) ((float) width / (float) cellWidth + 1);
+		int sizeWidth = (int) ((float) width / (float) cellWidth);
 		int sizeHeight = sizeH;
 		Paint linePaint = new Paint();
 		linePaint.setColor(gridColor);

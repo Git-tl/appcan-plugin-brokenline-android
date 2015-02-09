@@ -34,23 +34,11 @@
     }
     function resendsmse()
     {
-        var jsondata=
-        '{ "y":{"min": "10","max": "70","step": "10"},"x": [ "0127","0128", "0129", "0130", "0131","0201", "0202", "0203", "0204",  "0205","0205", "0206", "0207", "0208","0209","0210", "0211","今天", "0213", "0214","0215"],"actx": "17","data": ["25", "34", "41","52","25", "31", "15", "47", "26","25", "34", "41","52","25", "31", "15", "47", "26","25", "34", "41"],"compareY": [{"s": "0","e": "4","v": "45"},{"s": "4","e": "20","v": "40" } ],"xCount": "7"}';
-    
-        uexBrokenLine.setData(jsondata);
+        s=window.getComputedStyle(document.body,null);
+        var jsd='{ "y":{"min": "10","max": "70","step": "10"},"x": [ "0127","0128", "0129", "0130", "0131","0201", "0202", "0203", "0204",  "0205","0205", "0206", "0207", "0208","0209","0210", "0211","今天", "0213", "0214","0215"],"actx": "17","data": ["25", "34", "41","52","25", "31", "15", "47", "26","25", "34", "41","52","25", "31", "15", "47", "26","25", "34", "41"],"compareY": [{"s": "0","e": "4","v": "45"},{"s": "4","e": "20","v": "40" } ],"xCount": "7"}';
+        uexBrokenLine.setData(jsd);
+        uexBrokenLine.open("0", "0", parseInt(s.width), parseInt(s.height), "1"); 
         
-        var divTop = document.getElementById("topDiv").offsetTop + document.getElementById("topDiv").offsetHeight;
-    
-        var w = screen.availWidth/3;
-        var h = screen.availHeight/3;
-        
-        uexBrokenLine.open("10",divTop, w , h,"1");
-        
-        var jsondatatempt=
-        '{ "y":{"min": "0","max": "100","step": "20"},"x": [ "0227","0228","0301", "0302", "0303", "0304",  "0305","0305", "0306", "0307", "0308","0309","0310", "0311","今天", "0313", "0314","0315"],"actx": "14","data": ["52","80", "31", "10", "90", "20","45", "34", "71","62","85", "51", "15", "77", "16","55", "84", "41"],"compareY": [{"s": "0","e": "1","v": "50"},{"s": "1","e": "17","v": "60" } ],"xCount": "6"}';
-        uexBrokenLine.setData(jsondatatempt);
-        w = screen.availWidth/2;
-        uexBrokenLine.open("10",divTop+h+10,w,h,"2");
     }
 	
 		</script>
